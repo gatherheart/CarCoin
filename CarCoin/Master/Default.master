@@ -1,0 +1,77 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Default.master.cs" Inherits="SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - CarCoin Insurance Network</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link href="carousel.css" rel="stylesheet" />
+</head>
+<body class="default_background default_font">
+    <form runat="server">
+        <link rel="stylesheet" href="./Content/bootstrap.min.css">
+        <script src="./Scripts/jquery-3.3.1.min.js"></script>
+        <script src="./Scripts/bootstrap.min.js"></script>
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" runat="server" href="~/"><%: Page.Title %> - CarCoin Insurance Network</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                
+                <div class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+                    <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item" style="padding: .5rem 1rem;">
+                        <asp:Label ID="LabelLoginText" runat="server" Text="Log In"></asp:Label>
+                    </li>
+                </ul>
+                    <asp:Panel ID="PanelSearchForm" runat="server">
+                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </asp:Panel>
+                </div>
+            </div>
+            </nav>
+        </header>
+        <main role="main">
+
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+
+            <!-- FOOTER -->
+            <footer class="container" style="position: absolute; bottom: 0;">
+                <p class="float-right"><a href="#">Back to top</a></p>
+                <p>&copy; 2019 CarCoin, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+            </footer>
+        </main>
+    </form>
+</body>
+</html>
