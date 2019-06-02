@@ -72,4 +72,9 @@ public partial class SiteMaster : MasterPage
         this.LabelLoginText.Text = "Welcome, " + Session[Constants.SESSION_USERNICK].ToString();
 
     }
+
+    protected void LinkButtonLogout_Click(object sender, EventArgs e) {
+        LoginControl.Logout(Session);
+        Response.Redirect("~/Default.aspx");
+    }
 }

@@ -52,6 +52,11 @@
                     <li class="nav-item" style="padding: .5rem 1rem;">
                         <asp:Label ID="LabelLoginText" runat="server" Text="Log In"></asp:Label>
                     </li>
+                    <li>
+                        <asp:LinkButton ID="LinkButtonLogout" CssClass="nav-link" OnClick="LinkButtonLogout_Click" runat="server">
+                            <asp:Label ID="LabelLogoutText" runat="server" Text="Log Out"></asp:Label>
+                        </asp:LinkButton>
+                    </li>
                 </ul>
                     <asp:Panel ID="PanelSearchForm" runat="server">
                         <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
