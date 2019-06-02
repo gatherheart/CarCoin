@@ -10,9 +10,6 @@ using System.Web.UI.WebControls;
 
 public partial class Main : System.Web.UI.Page
 {
-    private BigInteger m_Balance;
-    public BigInteger Balance { get => m_Balance; set => m_Balance = value; }
-
     public string AccountAddress { get; set; }
 
     protected void Page_Load(object sender, EventArgs e)
@@ -72,7 +69,7 @@ public partial class Main : System.Web.UI.Page
     }
 
     /// <summary>
-    /// For later use (Delete entry button in repeater)
+    /// NOT USED: For later use (Delete entry button in repeater)
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -88,6 +85,6 @@ public partial class Main : System.Web.UI.Page
     /// <param name="e"></param>
     protected void LinkButtonAddAccident_Click(object sender, EventArgs e)
     {
-
+        Response.Redirect("~/Report.aspx");
     }
 }
