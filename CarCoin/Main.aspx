@@ -1,19 +1,18 @@
 ﻿<%@ Page Title="Main" Language="C#" MasterPageFile="~/Master/Default.master" AutoEventWireup="true" CodeFile="Main.aspx.cs" Inherits="Main" Async="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" Runat="Server">
+    <div style="margin-top: 150px;">&nbsp;</div>
     <div class="center-block">
-        <table style="border-collapse:collapse; margin-top: 150px;" class="d-flex justify-content-center mb-3">
-            <tr>
-                <td><asp:Label ID="LabelOutputWeiTitle" Text="Balance in Wei:" Visible="false" runat="server"></asp:Label></td>
-                <td><asp:Label ID="LabelOutputWei" runat="server"></asp:Label></td>
-            </tr>
-            <tr>
-                <td><asp:Label ID="LabelOutputEtherTitle" Text="Balance in Ether:" Visible="false" runat="server"></asp:Label></td>
-                <td><asp:Label ID="LabelOutputEther" runat="server"></asp:Label></td>
-            </tr>
-            <tr>
-                <td colspan="2">&nbsp;</td>
-            </tr>
+        <asp:Panel ID="PanelInsuranceControls" runat="server" Visible="false">
+            <table style="border-collapse:collapse" class="d-flex justify-content-center mb-3">
+                <tr>
+                    <td>
+                        <asp:LinkButton ID="LinkButtonAddAccident" OnClick="LinkButtonAddAccident_Click" runat="server">Report new accident to Blockchain</asp:LinkButton>
+                    </td>
+                </tr>
+            </table>
+        </asp:Panel>
+        <table style="border-collapse:collapse" class="d-flex justify-content-center mb-3">
             <tr>
                 <td colspan="2">Search Car</td>
             </tr>
@@ -38,6 +37,9 @@
                                     <th>Accident Time</th>
                                     <th>Car Value</th>
                                     <th>Car Data</th>
+                                    <% if (false) { //LoginControl.IsInsurance((int)Session["UID"]) for delete%>
+                                    <td>&nbsp;</td>
+                                    <% } %>
                                 </tr>
                         </HeaderTemplate>
                         <ItemTemplate>
@@ -51,6 +53,13 @@
                                     <td>
                                         <%# ((AccidentData)Container.DataItem).Data %>
                                     </td>
+                                    <% if (false) { //LoginControl.IsInsurance((int)Session["UID"]) for delete %>
+                                    <td>
+                                        <asp:LinkButton ID="LinkButtonDeleteEntry" OnCommand="LinkButtonDeleteEntry_Click" CommandArgument="<%# ((AccidentData)Container.DataItem).Data %>" runat="server">
+                                            Delete Entry
+                                        </asp:LinkButton>
+                                    </td>
+                                    <% } %>
                                 </tr>
                         </ItemTemplate>
                         <FooterTemplate>

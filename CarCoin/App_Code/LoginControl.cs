@@ -43,4 +43,23 @@ public class LoginControl
         }
         return retval;
     }
+
+    public static bool IsInsurance(int uid)
+    {
+        bool isInsurance = false;
+        DataAccess da = new DataAccess();
+        DataSetLogin dsl = da.GetLogin(uid);
+
+        try
+        {
+            if (dsl.user.Rows[0]["is_insurance"].ToString() == "1")
+                isInsurance = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+
+        return isInsurance;
+    }
 }

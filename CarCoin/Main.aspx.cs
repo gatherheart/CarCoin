@@ -6,6 +6,7 @@ using Nethereum.Web3.Accounts;
 using Nethereum.Contracts;
 using Nethereum.Hex.HexTypes;
 using System.Collections.Generic;
+using System.Web.UI.WebControls;
 
 public partial class Main : System.Web.UI.Page
 {
@@ -21,6 +22,9 @@ public partial class Main : System.Web.UI.Page
             //Login Control: redirect to home
             if (!LoginControl.IsLoggedIn(Session))
                 Response.Redirect("~/Default.aspx");
+
+            if (LoginControl.IsInsurance((int)Session[Constants.SESSION_USERID]))
+                this.PanelInsuranceControls.Visible = true;
         }
         catch (Exception ex)
         {
@@ -65,5 +69,25 @@ public partial class Main : System.Web.UI.Page
             functionInput: carNumber);
 
         return getAccidentData;
+    }
+
+    /// <summary>
+    /// For later use (Delete entry button in repeater)
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void LinkButtonDeleteEntry_Click(object sender, CommandEventArgs e)
+    {
+        var argument = e.CommandArgument.ToString();
+    }
+
+    /// <summary>
+    /// Goes to record accident page
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void LinkButtonAddAccident_Click(object sender, EventArgs e)
+    {
+
     }
 }
