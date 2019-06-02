@@ -30,6 +30,9 @@
             </tr>
             <tr>
                 <td colspan="2">
+                    <asp:Panel ID="PanelNoRecordsFound" runat="server" Visible="false">
+                        <asp:Label ID="LabelNoRecordsFound" Text="No records found for this car!" ForeColor="Red" runat="server"></asp:Label>
+                    </asp:Panel>
                     <asp:Repeater ID="RepeaterAccidentData" runat="server" Visible="false">
                         <HeaderTemplate>
                             <table>

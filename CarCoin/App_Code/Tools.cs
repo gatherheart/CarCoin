@@ -22,44 +22,49 @@ public class Tools
     {
         List<AccidentData> accidentDataList = new List<AccidentData>();
 
-        // input has always 3 values (to split with delimiter @): 
-        // time, value and data
-        string[] values = input.Split('@');
-        string t = "";
-
-        t = cutTrailingChar('\\', values[0]);
-
-        // each value has n entries
-        foreach (string timeEntry in t.Split('\\'))
+        if (input != null)
         {
-            AccidentData ad = new AccidentData();
-            ad.Time = DateTime.ParseExact(timeEntry,
-                                  "yyyyMMdd",
-                                   CultureInfo.InvariantCulture); 
-            accidentDataList.Add(ad); //add new Accident Data to list
+            // input has always 3 values (to split with delimiter @): 
+            // time, value and data
+            string[] values = input.Split('@');
+            string t = "";
+
+            t = cutPrecedingChar('\\', values[0]);
+
+            // each value has n entries
+            foreach (string timeEntry in t.Split('\\'))
+            {
+                AccidentData ad = new AccidentData();
+                ad.Time = DateTime.ParseExact(timeEntry,
+                                      "yyyyMMdd",
+                                       CultureInfo.InvariantCulture);
+                accidentDataList.Add(ad); //add new Accident Data to list
+            }
+
+
+            t = cutPrecedingChar('\\', values[1]);
+            int i = 0;
+
+            // assuming cohoerent data from contract
+            foreach (string valueEntry in t.Split('\\'))
+            {
+                accidentDataList[i].LostValue = BigInteger.Parse(valueEntry); //use list
+                i++;
+            }
+
+
+            t = cutPrecedingChar('/', values[2]);
+            i = 0;
+            // for not thinking about the return, once again 
+            foreach (string valueData in t.Split('/'))
+            {
+                accidentDataList[i].Data = valueData;
+                i++;
+            }
         }
-
-
-        t = cutTrailingChar('\\', values[1]);
-        int i = 0;
-
-        // assuming cohoerent data from contract
-        foreach (string valueEntry in t.Split('\\'))
-        {
-            accidentDataList[i].LostValue = BigInteger.Parse(valueEntry); //use list
-            i++;
+        else {
+            //car has no data
         }
-
-
-        t = cutTrailingChar('/', values[2]);
-        i = 0;
-        // for not thinking about the return, once again 
-        foreach (string valueData in t.Split('/'))
-        {
-            accidentDataList[i].Data = valueData;
-            i++;
-        }
-
         return accidentDataList;
     }
 
@@ -69,7 +74,7 @@ public class Tools
     /// <param name="c">starting character to cut off</param>
     /// <param name="val">string</param>
     /// <returns>cut string if present</returns>
-    private string cutTrailingChar(char c, string val)
+    private string cutPrecedingChar(char c, string val)
     {
         string temp = "";
         if (val.StartsWith(c.ToString()))

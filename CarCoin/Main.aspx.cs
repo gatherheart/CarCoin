@@ -40,16 +40,21 @@ public partial class Main : System.Web.UI.Page
         string accidentData = await accidentDataOutputTask;
         List<AccidentData> adl = new Tools().ProcessAccidentDataInput(accidentData);
 
-        this.RepeaterAccidentData.DataSource = adl;
-        this.RepeaterAccidentData.DataBind();
+        if (adl.Count == 0)
+            this.PanelNoRecordsFound.Visible = true;
+        else
+        {
+            this.RepeaterAccidentData.DataSource = adl;
+            this.RepeaterAccidentData.DataBind();
 
-        this.RepeaterAccidentData.Visible = true;
+            this.RepeaterAccidentData.Visible = true;
+        }
     }
 
     protected static async Task<string> GetAccidentData(string accountAddress, string carNumber)
     {
-        var privateKey = "799C0BB7B1DDAD07D24AE66240CFA1263F8FF49FF3BBE92C203AC2D0F6136919";
-        //var privateKey = "D971363300B10DD559F5883F86F16B2099BBD577A7585EBC7156285033256718"; //mine
+        //var privateKey = "799C0BB7B1DDAD07D24AE66240CFA1263F8FF49FF3BBE92C203AC2D0F6136919";
+        var privateKey = "D971363300B10DD559F5883F86F16B2099BBD577A7585EBC7156285033256718"; //mine
 
         var abi = System.IO.File.ReadAllText(Constants.ETHEREUM_CONTRACT_ABIFILE); //190531_contract
         string ABI = @abi;
