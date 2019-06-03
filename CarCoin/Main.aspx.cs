@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 public partial class Main : System.Web.UI.Page
 {
     public string AccountAddress { get; set; }
+    private string AccountPrivateKey { get; set; }
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -32,6 +33,7 @@ public partial class Main : System.Web.UI.Page
         DataSetLogin dsl = da.GetLogin((int)Session[Constants.SESSION_USERID]);
 
         this.AccountAddress = dsl.user.Rows[0]["ethereum_adr"].ToString();
+        this.AccountPrivateKey = dsl.user.Rows[0]["private_key"].ToString();
     }
 
     protected async void LinkButtonSearchCar_Click(object sender, EventArgs e)
@@ -56,15 +58,12 @@ public partial class Main : System.Web.UI.Page
         }
     }
 
-    protected static async Task<string> GetAccidentData(string accountAddress, string carNumber)
+    protected async Task<string> GetAccidentData(string accountAddress, string carNumber)
     {
-        //var privateKey = "799C0BB7B1DDAD07D24AE66240CFA1263F8FF49FF3BBE92C203AC2D0F6136919";
-        var privateKey = "D971363300B10DD559F5883F86F16B2099BBD577A7585EBC7156285033256718"; //mine
-
         var abi = System.IO.File.ReadAllText(Constants.ETHEREUM_CONTRACT_ABIFILE); //190531_contract
         string ABI = @abi;
         
-        var web3 = new Web3(new Account(privateKey), Constants.ETHEREUM_ENDPOINT_API);
+        var web3 = new Web3(new Account(AccountPrivateKey), Constants.ETHEREUM_ENDPOINT_API);
         Contract carCoinContract = web3.Eth.GetContract(ABI, Constants.ETHEREUM_CONTRACT_ADDRESS);
 
         //get the function by name
