@@ -3,15 +3,15 @@ import "./Ownerable.sol";
 import "./SafeMath.sol";
 import "./ArrayUtils.sol";
 
-contract CarCoinDatabase is Ownerable {
+contract CarCoinDatabase {
     
     event CeoRegistered(address NewOwner);
     // The addresses that can execute actions within each roles.
     address public ceoAddress;
     
     constructor () public {
-        ceoAddress = owner;
-        emit CeoRegistered(owner);
+        ceoAddress = msg.sender;
+        emit CeoRegistered(msg.sender);
     }
 
     struct Car {

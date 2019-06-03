@@ -7,6 +7,11 @@
             <table style="border-collapse:collapse" class="d-flex justify-content-center mb-3">
                 <tr>
                     <td>
+                        <asp:LinkButton ID="LinkButtonRegisterNewCar" OnClick="LinkButtonRegisterNewCar_Click" runat="server">Register new car in Blockchain</asp:LinkButton>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <asp:LinkButton ID="LinkButtonAddAccident" OnClick="LinkButtonAddAccident_Click" runat="server">Report new accident to Blockchain</asp:LinkButton>
                     </td>
                 </tr>

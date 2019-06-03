@@ -41,9 +41,14 @@ public partial class Main : System.Web.UI.Page
         List<AccidentData> adl = new Tools().ProcessAccidentDataInput(accidentData);
 
         if (adl.Count == 0)
+        {
             this.PanelNoRecordsFound.Visible = true;
+            this.RepeaterAccidentData.Visible = false;
+        }
         else
         {
+            this.PanelNoRecordsFound.Visible = false; 
+
             this.RepeaterAccidentData.DataSource = adl;
             this.RepeaterAccidentData.DataBind();
 
@@ -81,6 +86,15 @@ public partial class Main : System.Web.UI.Page
     protected void LinkButtonDeleteEntry_Click(object sender, CommandEventArgs e)
     {
         var argument = e.CommandArgument.ToString();
+    }
+    /// <summary>
+    /// Goes to register new car page
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void LinkButtonRegisterNewCar_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/CarRegistration.aspx");
     }
 
     /// <summary>

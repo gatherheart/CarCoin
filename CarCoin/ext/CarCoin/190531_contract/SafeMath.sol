@@ -46,7 +46,6 @@ library SafeMath {
         
         uint256 result = a / b;
         
-        require(a == result * b + (a % b), "SafeMath: overflow");
         return result;
     }
     

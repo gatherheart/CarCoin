@@ -22,44 +22,27 @@ public class Tools
     {
         List<AccidentData> accidentDataList = new List<AccidentData>();
 
-        if (input != null)
+        if (input != null && input != "")
         {
-            // input has always 3 values (to split with delimiter @): 
+            // input format "20190602|2100|crash01@20190602|300|crash02@" (to split with delimiter @): 
             // time, value and data
-            string[] values = input.Split('@');
-            string t = "";
+            List<string> values = input.Split('@').ToList<string>();
 
-            t = cutPrecedingChar('\\', values[0]);
-
-            // each value has n entries
-            foreach (string timeEntry in t.Split('\\'))
+            foreach (string tuple in values)
             {
-                AccidentData ad = new AccidentData();
-                ad.Time = DateTime.ParseExact(timeEntry,
-                                      "yyyyMMdd",
-                                       CultureInfo.InvariantCulture);
-                accidentDataList.Add(ad); //add new Accident Data to list
-            }
+                if (tuple != "")
+                {
+                    List<string> entries = tuple.Split('|').ToList<string>();
+                    AccidentData ad = new AccidentData();
 
+                    ad.Time = DateTime.ParseExact(entries[0].ToString(),
+                                          "yyyyMMdd",
+                                           CultureInfo.InvariantCulture);
+                    ad.LostValue = BigInteger.Parse(entries[1].ToString());
+                    ad.Data = entries[2].ToString();
 
-            t = cutPrecedingChar('\\', values[1]);
-            int i = 0;
-
-            // assuming cohoerent data from contract
-            foreach (string valueEntry in t.Split('\\'))
-            {
-                accidentDataList[i].LostValue = BigInteger.Parse(valueEntry); //use list
-                i++;
-            }
-
-
-            t = cutPrecedingChar('/', values[2]);
-            i = 0;
-            // for not thinking about the return, once again 
-            foreach (string valueData in t.Split('/'))
-            {
-                accidentDataList[i].Data = valueData;
-                i++;
+                    accidentDataList.Add(ad); //add new Accident Data to list
+                }
             }
         }
         else {
@@ -69,7 +52,7 @@ public class Tools
     }
 
     /// <summary>
-    /// Fixing a concetenation "problem" from contract lol
+    /// Fixing a concetenation "problem" from contract lol (OBSOLETE)
     /// </summary>
     /// <param name="c">starting character to cut off</param>
     /// <param name="val">string</param>

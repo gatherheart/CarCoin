@@ -13,7 +13,8 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
     bytes4 internal constant ERC721X_BATCH_RECEIVE_SIG = 0xe9e5be6a;
     
     mapping(uint256 => address []) public tokenOwners;
-    mapping(address => bool) public tokenMaker;
+    address private tokenMaker; // the contract that mint coins -> carcoin contract
+    address private prevTokenMaker; 
     
     uint256 zeroCoin = 0;
 
@@ -41,7 +42,10 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
     }
     
     modifier TokenMaker(address addr){
-        require(tokenMaker[addr] || addr == owner, "Not allowed token maker");
+        require(
+            tokenMaker == addr
+            || owner == addr,
+            "Not allowed token maker");
         _;
     }
     
@@ -56,20 +60,26 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
         return true;
     }
     
-    function tokenMakerSet(address addr, bool approve) public onlyOwner {
-        tokenMaker[addr] = approve;
+    function setCarCoinAddr(address addr) public onlyOwner {
+        if (tokenMaker != address(0)){
+            setApprovalForAll(tokenMaker, false);
+            prevTokenMaker = tokenMaker;
+        }
+        tokenMaker = addr;
+        setApprovalForAll(addr, true);
     }
     
-    function setApprovalForAll(address operator, bool _approved) NotZeroAddr(operator) external{
-        
-        // operator should not be msg.sender 
-        require(operator != msg.sender);
     
-        _operatorApprovals[msg.sender][operator] = _approved;
-        emit ApprovalForAll(msg.sender, operator, _approved);
+    function setApprovalForAll(address operator, bool _approved) NotZeroAddr(operator) public{
+        
+        // operator should not be tx.origin 
+        require(operator != tx.origin);
+    
+        _operatorApprovals[tx.origin][operator] = _approved;
+        emit ApprovalForAll(tx.origin, operator, _approved);
         
     }
-    
+
     function balanceOf(address _owner, uint256 tokenId) public view returns (uint256){
         return tokenBalance[_owner][tokenId];
     }
@@ -77,10 +87,9 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
     function _transferFrom(address _from, address to, uint256 tokenId, uint256 quantity) 
         public NotZeroAddr(_from) NotZeroAddr(to) {
         
-        // check whether the amount of  token is allowed or not 
-        if(_from != msg.sender){
-            require(_operatorApprovals[_from][msg.sender]);
-        }
+        // ISC should allow carcoin contract as an operator
+        require(msg.sender == _from || _operatorApprovals[_from][msg.sender]);
+        
         require(tokenType[tokenId] == FT);
         
         require(quantity <= this.balanceOf(_from, tokenId), "Quantity exceeds balance");
@@ -104,7 +113,7 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
     }
     
     function transfer(address to, uint256 tokenId, uint256 quantity) public {
-        _transferFrom(msg.sender, to, tokenId, quantity);
+        _transferFrom(tx.origin, to, tokenId, quantity);
     }
 
     function transferFrom(address _from, address to, uint256 tokenId, uint256 quantity) public{
@@ -130,7 +139,7 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
             return true;
         }
         // check whether ERC721XReceiver is implemented or not 
-        bytes4 retval = ERC721XReceiver(to).onERC721XReceived(msg.sender, _from, tokenId, quantity, _data);
+        bytes4 retval = ERC721XReceiver(to).onERC721XReceived(tx.origin, _from, tokenId, quantity, _data);
         return (retval == ERC721X_RECEIVED);
     }
     
@@ -141,7 +150,7 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
             return true;
         }
         // check whether ERC721XReceiver is implemented or not 
-        bytes4 retval = ERC721XReceiver(to).onERC721XBatchReceived(msg.sender, _from, tokenIds, quantities, data);
+        bytes4 retval = ERC721XReceiver(to).onERC721XBatchReceived(tx.origin, _from, tokenIds, quantities, data);
         return (retval == ERC721X_BATCH_RECEIVE_SIG);
         
     }
@@ -156,8 +165,8 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
         
         for(uint256 i = 0; i < tokenIds.length; i++){
             // check whether the amount of  token is allowed or not 
-            if(_from != msg.sender){
-                require(_operatorApprovals[_from][msg.sender]);
+            if(_from != tx.origin ){
+                require(_operatorApprovals[_from][tx.origin]);
             }
             _transferFrom(_from, to, tokenIds[i], quantities[i]);
         }
@@ -212,26 +221,29 @@ contract ERC721XTokenFT is IERC721X, ERC721XTokenNFT, Ownerable{
     
     function burn(address _owner, uint256 tokenId) external TokenMaker(msg.sender) {
         
-        require(tokenOwners[tokenId].exist(_owner), "owner(param1) is not a token holder for tokenId");
-        require(_operatorApprovals[_owner][msg.sender], "all tokens should be allowed to operator");
+        require(tokenOwners[tokenId].exist(_owner)); // owner should hold token 
+            
+        if(_operatorApprovals[_owner][tx.origin] || _owner == tx.origin){
+            
+            tokenOwners[tokenId].removeItem(_owner);
+            
+            // There is no more tokens for tokenId
+            if(tokenOwners[tokenId].length == 0){
+                tokenType[tokenId] = 0;
+                allTokens.removeItem(tokenId);
+            }
+            
+            tokenBalance[_owner][tokenId] = 0;
+            tokenOwners[tokenId].removeItem(_owner);
+            ownedTokenList[_owner].removeItem(tokenId);
         
-        tokenOwners[tokenId].removeItem(_owner);
-        
-        // There is no more tokens for tokenId
-        if(tokenOwners[tokenId].length == 0){
-            tokenType[tokenId] = 0;
-            allTokens.removeItem(tokenId);
+            emit Transfer(_owner, address(0), tokenId);
+            
         }
-        
-        tokenBalance[_owner][tokenId] = 0;
-        tokenOwners[tokenId].removeItem(_owner);
-        ownedTokenList[_owner].removeItem(tokenId);
-    
-        emit Transfer(_owner, address(0), tokenId);
     }
     
     function burn(uint256 tokenId) external TokenMaker(msg.sender) {
-        _burn(msg.sender, tokenId);
+        _burn(tx.origin, tokenId);
     }
     
 }
