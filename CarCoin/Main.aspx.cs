@@ -60,7 +60,7 @@ public partial class Main : System.Web.UI.Page
 
     protected async Task<string> GetAccidentData(string accountAddress, string carNumber)
     {
-        var abi = System.IO.File.ReadAllText(Constants.ETHEREUM_CONTRACT_ABIFILE); //190531_contract
+        var abi = System.IO.File.ReadAllText(Server.MapPath(".") + Constants.ETHEREUM_CONTRACT_ABIFILE); //190531_contract
         string ABI = @abi;
         
         var web3 = new Web3(new Account(AccountPrivateKey), Constants.ETHEREUM_ENDPOINT_API);

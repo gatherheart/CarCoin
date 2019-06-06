@@ -55,7 +55,7 @@ public partial class CarRegistration : System.Web.UI.Page
             BigInteger time = BigInteger.Parse(newCarTime);
             HexBigInteger gas = new HexBigInteger(new BigInteger(900000));
             HexBigInteger value = new HexBigInteger(new BigInteger(0));
-            var abi = System.IO.File.ReadAllText(Constants.ETHEREUM_CONTRACT_ABIFILE); //190531_contract
+            var abi = System.IO.File.ReadAllText(Server.MapPath(".") + Constants.ETHEREUM_CONTRACT_ABIFILE); //190531_contract
             string ABI = @abi;
 
             var web3 = new Web3(new Account(this.AccountPrivateKey), Constants.ETHEREUM_ENDPOINT_API);

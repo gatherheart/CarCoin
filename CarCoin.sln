@@ -27,9 +27,12 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CarCoin", "CarCoin\", "{B9F
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CarCoin|Any CPU = CarCoin|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9F43AD9-50FD-4066-B08C-9323FF8EC70C}.CarCoin|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9F43AD9-50FD-4066-B08C-9323FF8EC70C}.CarCoin|Any CPU.Build.0 = Debug|Any CPU
 		{B9F43AD9-50FD-4066-B08C-9323FF8EC70C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9F43AD9-50FD-4066-B08C-9323FF8EC70C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
