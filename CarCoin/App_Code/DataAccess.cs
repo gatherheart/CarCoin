@@ -76,4 +76,22 @@ public class DataAccess
 
         return retval;
     }
+
+    public void RegisterNewUser(string uid, string pw, string nick, string iscAddr, string iscPrivKey)
+    {
+        DataSetLoginTableAdapters.TableAdapterUser userTableAdapter = new DataSetLoginTableAdapters.TableAdapterUser();
+        DataSetLogin userData = new DataSetLogin();
+
+        //new user can never be ISC, owner has to set manually
+        userTableAdapter.InsertQuery(uid, pw, nick, iscAddr, iscPrivKey, 0);
+    }
+
+    public DataSetLogin GetInsuranceByEthereumAddress(string ea)
+    {
+        DataSetLoginTableAdapters.TableAdapterUser userTableAdapter = new DataSetLoginTableAdapters.TableAdapterUser();
+        DataSetLogin userData = new DataSetLogin();
+        userTableAdapter.FillByEthereumAddr(userData.user, ea);
+
+        return userData;
+    }
 }

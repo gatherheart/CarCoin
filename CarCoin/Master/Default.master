@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Default.master.cs" Inherits="SiteMaster" %>
+﻿﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Default.master.cs" Inherits="SiteMaster" %>
 
 <!DOCTYPE html>
 
@@ -6,7 +6,7 @@
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - CarCoin Insurance Network</title>
+    <title><%: Page.Title %> </title>
 
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
@@ -14,6 +14,12 @@
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <style>
+       .body{
+          background: #1F1C2C;  /* fallback for old browsers */
+          background: -webkit-linear-gradient(to right, #928DAB, #1F1C2C);  /* Chrome 10-25, Safari 5.1-6 */
+          background: linear-gradient(to right, #928DAB, #1F1C2C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+       }
+     
       .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -38,7 +44,9 @@
         <script src="./Scripts/bootstrap.min.js"></script>
         <header>
             <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <a class="navbar-brand" runat="server" href="~/"><%: Page.Title %> - CarCoin Insurance Network</a>
+            <a class="navbar-brand" runat="server" href="~/"><%: Page.Title %> 
+                   <img src="/images/navlogo.png" alt="">
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -73,8 +81,6 @@
 
             <!-- FOOTER -->
             <footer class="container" style="position: absolute; bottom: 0;">
-                <p class="float-right"><a href="#">Back to top</a></p>
-                <p>&copy; 2019 CarCoin, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
             </footer>
         </main>
     </form>

@@ -35,20 +35,25 @@ public partial class CarRegistration : System.Web.UI.Page
 
     protected async void LinkButtonRegisterCar_Click(object sender, EventArgs e)
     {
-        bool success = false;
+        string success = "";
 
         success = await RegisterNewCar(
             this.TextBoxCarNumber.Text,
             this.TextBoxAddCarValue.Text,
             this.TextBoxAddCarTime.Text);
 
-        if (success)
-            Response.Redirect("~/Main.aspx");
+        if (success != "")
+        {
+            this.LabelTransactionLinkText.Visible = true;
+            this.LinkButtonTransactionLink.Visible = true;
+            this.LinkButtonTransactionLink.Text = success;
+            this.LinkButtonTransactionLink.PostBackUrl = new Uri("https://ropsten.etherscan.io/tx/" + success).ToString();
+        }
     }
 
-    protected async Task<bool> RegisterNewCar(string carNumber, string carValue, string newCarTime)
+    protected async Task<string> RegisterNewCar(string carNumber, string carValue, string newCarTime)
     {
-        bool retval = false;
+        string retval = "";
         try
         {
             BigInteger loss = BigInteger.Parse(carValue);
@@ -63,14 +68,14 @@ public partial class CarRegistration : System.Web.UI.Page
 
             //get the function by name
             var ccFunction = carCoinContract.GetFunction("carRegistration");
-            var sendAccidentData = await ccFunction.SendTransactionAsync(this.AccountAddress,
+            var carRegistrationData = await ccFunction.SendTransactionAsync(this.AccountAddress,
                 gas,
                 value,
                 carNumber,
                 loss,
                 time);
 
-            retval = true;
+            retval = carRegistrationData;
         }
         catch (Exception ex)
         {

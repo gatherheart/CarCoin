@@ -19,10 +19,16 @@
             <td><asp:TextBox ID="TextBoxAddCarTime" runat="server" Text="20190603"></asp:TextBox></td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td colspan="2" style="text-align: right;">
                 <asp:LinkButton ID="LinkButtonRegisterCar" OnClick="LinkButtonRegisterCar_Click" runat="server">Register New Car</asp:LinkButton>
             </td>
         </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td><asp:Label ID="LabelTransactionLinkText" Text="Link to transaction (Etherscan):" runat="server" Visible="false"></asp:Label></td>
+            <td><asp:LinkButton ID="LinkButtonTransactionLink" Text="" runat="server" Visible="false"></asp:LinkButton></td>
+        </tr>
     </table>
 </asp:Content>
-

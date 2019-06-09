@@ -40,23 +40,14 @@ public partial class Main : System.Web.UI.Page
     {
         Task<string> accidentDataOutputTask = GetAccidentData(this.AccountAddress, this.TextBoxCarNumber.Text);
         string accidentData = await accidentDataOutputTask;
-        List<AccidentData> adl = new Tools().ProcessAccidentDataInput(accidentData);
+        ProcessGetAccidentData(accidentData);
 
-        if (adl.Count == 0)
-        {
-            this.PanelNoRecordsFound.Visible = true;
-            this.RepeaterAccidentData.Visible = false;
-        }
-        else
-        {
-            this.PanelNoRecordsFound.Visible = false; 
-
-            this.RepeaterAccidentData.DataSource = adl;
-            this.RepeaterAccidentData.DataBind();
-
-            this.RepeaterAccidentData.Visible = true;
-        }
+        Task<BigInteger> carValueTask = GetCarValue(this.AccountAddress, this.TextBoxCarNumber.Text);
+        BigInteger carValue = await carValueTask;
+        ProcessGetCarValue(carValue);
     }
+
+    
 
     protected async Task<string> GetAccidentData(string accountAddress, string carNumber)
     {
@@ -75,6 +66,59 @@ public partial class Main : System.Web.UI.Page
             functionInput: carNumber);
 
         return getAccidentData;
+    }
+    protected void ProcessGetAccidentData(string ad)
+    {
+
+        List<AccidentData> adl = new Tools().ProcessAccidentDataInput(ad);
+
+        if (adl.Count == 0)
+        {
+            this.PanelNoRecordsFound.Visible = true;
+            this.RepeaterAccidentData.Visible = false;
+        }
+        else
+        {
+            this.PanelNoRecordsFound.Visible = false;
+
+            this.RepeaterAccidentData.DataSource = adl;
+            this.RepeaterAccidentData.DataBind();
+
+            this.RepeaterAccidentData.Visible = true;
+        }
+    }
+
+    private async Task<BigInteger> GetCarValue(string accountAddress, string carNumber)
+    {
+        var abi = System.IO.File.ReadAllText(Server.MapPath(".") + Constants.ETHEREUM_CONTRACT_ABIFILE); //190531_contract
+        string ABI = @abi;
+
+        var web3 = new Web3(new Account(AccountPrivateKey), Constants.ETHEREUM_ENDPOINT_API);
+        Contract carCoinContract = web3.Eth.GetContract(ABI, Constants.ETHEREUM_CONTRACT_ADDRESS);
+
+        //get the function by name
+        var ccFunction = carCoinContract.GetFunction("getTokenBalance");
+        var getCarValue = await ccFunction.CallAsync<BigInteger>(
+            from: accountAddress,
+            gas: new HexBigInteger(0),
+            value: new HexBigInteger(0),
+            functionInput: carNumber);
+
+        return getCarValue;
+    }
+
+    private void ProcessGetCarValue(BigInteger cv) {
+        bool setVisible = false;
+
+        if (cv != null && cv >= 0)
+        {
+            this.LabelCarValue.Text = cv.ToString();
+            setVisible = true;
+        }
+
+        this.LabelCarValueText.Visible = setVisible;
+        this.LabelCarValue.Visible = setVisible;
+        this.LabelCarCoinText.Visible = setVisible;
     }
 
     /// <summary>

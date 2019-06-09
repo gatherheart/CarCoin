@@ -75,4 +75,9 @@ public partial class SiteMaster : MasterPage
     {
         Response.Redirect("~/Login.aspx");
     }
+    
+    protected void LinkButtonRegister_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/UserRegistration.aspx");
+    }
 }

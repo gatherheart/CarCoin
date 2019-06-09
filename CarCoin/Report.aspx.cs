@@ -35,7 +35,7 @@ public partial class Report : System.Web.UI.Page
 
     protected async void LinkButtonReportAccident_Click(object sender, EventArgs e)
     {
-        bool success = false;
+        string success = "";
 
         success = await ReportAccident(
             this.TextBoxCarNumber.Text, 
@@ -43,13 +43,18 @@ public partial class Report : System.Web.UI.Page
             this.TextBoxAccidentValue.Text, 
             this.TextBoxAccidentData.Text);
 
-        if (success)
-            Response.Redirect("~/Main.aspx");
+        if (success != "")
+        {
+            this.LabelTransactionLinkText.Visible = true;
+            this.LinkButtonTransactionLink.Visible = true;
+            this.LinkButtonTransactionLink.Text = success;
+            this.LinkButtonTransactionLink.PostBackUrl = new Uri("https://ropsten.etherscan.io/tx/" + success).ToString();
+        }
     }
 
-    protected async Task<bool> ReportAccident(string carNumber, string accidentTime, string carValue, string accidentData)
+    protected async Task<string> ReportAccident(string carNumber, string accidentTime, string carValue, string accidentData)
     {
-        bool retval = false;
+        string retval = "";
         try
         {
             BigInteger time = BigInteger.Parse(accidentTime); // it will be oracle time and date
@@ -72,7 +77,7 @@ public partial class Report : System.Web.UI.Page
                 loss, 
                 accidentData);
 
-            retval = true;
+            retval = sendAccidentData;
         }
         catch (Exception ex)
         {
